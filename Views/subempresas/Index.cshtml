@@ -1,0 +1,189 @@
+﻿@model Proyecto_RadixWeb.Models.MultiplesClases
+
+@{
+    ViewBag.Title = "Index";
+}
+<div class="content-wrapper">
+    <div class="container-fluid">
+        <div class="card mb-3">
+            <div class="card-header">
+                <i class="fa fa-table"></i> Data Table Example
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <h3 id="titulo">
+
+                        <a class="btn btn-success" href="#" data-toggle="modal" data-target="#MiModal">Nueva Sucursal</a>
+
+                    </h3>
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>
+                                    Sucursales
+
+                                </th>
+                                <th>
+                                    Cant. RR.HH.
+
+                                </th>
+
+                                <th>
+                                    Dirección
+                                </th>
+                                <th>
+                                    Comuna
+                                </th>
+
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.ObjESubEmpresas)
+                            {
+                                <tr>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Sub_Nom)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Sub_Cant)
+                                    </td>
+
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Sub_Dir)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.comunas.Com_Nom)
+                                    </td>
+
+                                    <td>
+                                        <a href="@Url.Action("Index", "Contratos", new { subemp_id = item.Sub_Id })" class="btn btn-outline-success btn-sm m-0">
+                                            Ver Información
+                                        </a>
+
+                                        @*<a href="@Url.Action("Edit", "SubEmpresas", new { id = item.Sub_Id })" class="btn btn-outline-success btn-sm m-0">
+                                                Editar
+                                            </a>*@
+                                        @*<a href="@Url.Action("Delete", "SubEmpresas", new { id = item.Sub_Id })" class="btn btn-outline-success btn-sm m-0">
+                                                Eliminar
+                                            </a>*@
+                                        <a href="@Url.Action("Index", "SubEmpresa_Cargos", new { subemp_id = item.Sub_Id })" class="btn btn-outline-success btn-sm m-0">
+                                            Cargos Especifico
+                                        </a>
+
+                                    </td>
+
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div>
+        </div>
+
+
+        <!-- Modal -->
+        <div class="modal fade" id="MiModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                @using (Html.BeginForm())
+                {
+
+                    @Html.AntiForgeryToken()
+
+                    <!-- Modal content-->
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title">Nueva Sucursal</h4>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <!--Contenido del centro-->
+                        <div class="modal-body">
+                            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.ObjSubEmpresas.Sub_Nom)
+                                @Html.Editor("Sub_Nom", new { htmlAttributes = new { @class = "form-control" } })
+                            </div>
+
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.ObjSubEmpresas.Sub_Cant)
+                                @Html.Editor("Sub_Cant", new { htmlAttributes = new { @class = "form-control" } })
+                            </div>
+
+
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.ObjSubEmpresas.Sub_Estado)
+                                @Html.Editor("Sub_Estado", new { htmlAttributes = new { @class = "form-control" } })
+                            </div>
+
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.ObjSubEmpresas.Sub_Dir)
+                                @Html.Editor("Sub_Dir", new { htmlAttributes = new { @class = "form-control" } })
+                            </div>
+
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.ObjRegiones.Reg_Id)
+                                @if (ViewBag.regiones != null)
+                                {
+                                    @Html.DropDownListFor(model => model.ObjRegiones.Reg_Id, ViewBag.regiones as SelectList, "--- Seleccionar Región ---", new { @class = "form-control" })
+
+                                }
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.ObjProvincias.Prov_Id)
+                                @Html.DropDownListFor(model => model.ObjProvincias.Prov_Id, new SelectList(" "), "--- Seleccionar Provincia ---", new { @class = "form-control" })
+
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.ObjComunas.Com_Id)
+                                @Html.DropDownList("Com_Id", new SelectList(" "), "--- Seleccionar Comuna ---", new { @class = "form-control" })
+
+                            </div>
+                        </div>
+
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                            <button type="submit" class="btn btn-primary">Guardar</button>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="~/Scripts/jquery-3.3.1.min.js"></script>
+<script>
+
+
+
+    $(document).ready(function () {
+
+        $("#ObjRegiones_Reg_Id").change(function () {
+            $.get("/SubEmpresas/ObtenerProvincia", { Reg_Id: $("#ObjRegiones_Reg_Id").val() }, function (data) {
+                $("#ObjProvincias_Prov_Id").empty();
+                $.each(data, function (Create, row) {
+
+                    $("#ObjProvincias_Prov_Id").append("<option value='" + row.Prov_Id + "'>" + row.Prov_Nom + "</option>")
+                });
+            });
+        });
+
+        $("#ObjProvincias_Prov_Id").change(function () {
+            $.get("/SubEmpresas/ObtenerComuna", { Prov_Id: $("#ObjProvincias_Prov_Id").val() }, function (data) {
+                $("#Com_Id").empty();
+                $.each(data, function (Create, row) {
+
+                    $("#Com_Id").append("<option value='" + row.Com_Id + "'>" + row.Com_Nom + "</option>")
+                });
+            });
+        });
+    });
+
+
+
+</script>

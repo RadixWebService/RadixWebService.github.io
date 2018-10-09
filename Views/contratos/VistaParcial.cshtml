@@ -1,0 +1,144 @@
+﻿@model Proyecto_RadixWeb.Models.MultiplesClases
+
+<h3>
+    @Html.ActionLink("Nueva Persona", "RedirecionarPersonas", new { subemp_id = ViewBag.subemp_id })
+
+</h3>
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th>
+                RUT
+            </th>
+            <th>
+                Nombre
+            </th>
+            <th>
+                Apellidos
+            </th>
+
+            <th>
+                Cargo
+            </th>
+
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.ObjEContrato)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.personas.Per_Rut)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.personas.Per_Nom)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.personas.Per_ApePat)
+                    @Html.DisplayFor(modelItem => item.personas.Per_ApeMat)
+                </td>
+
+                <td>
+                    @Html.DisplayFor(modelItem => item.personas.cargos.Car_Nom)
+                </td>
+                <td>
+                    @if (item.personas.cargos.Car_Nom != "Agricola")
+                    {
+                        <a href="@Url.Action("RedirecionarCuenta", "Contratos", new { subemp_id = ViewBag.subemp_id, per_rut = item.Per_Rut, car_nom = item.personas.cargos.Car_Nom})"
+                           class="btn btn-outline-success btn-sm m-0">
+                            Crear Cuenta
+                        </a>
+
+                    }
+
+                    @if (item.Doc_Id == null)
+                    {
+                        <a  class="btn btn-outline-success btn-sm m-0 documento" id="@item.Con_Id" href="#"  data-toggle="modal" data-target="#MiDoc">
+                            Agregar Contrato
+                        </a>
+                    }
+                    else if (item.Doc_Id != null)
+                    {
+
+                        <a href="@Url.Action("Edit", "Contratos", new { id = item.Con_Id })" class="btn btn-outline-success btn-sm m-0">
+                            Ver Contrato
+                        </a>
+                    }
+
+
+                    @*<a href="@Url.Action("Edit", "Contratos", new { id = item.Con_Id })" class="btn btn-outline-success btn-sm m-0">
+                            Editar
+                        </a>
+                        <a href="@Url.Action("Delete", "Contratos", new { id = item.Con_Id })" class="btn btn-outline-success btn-sm m-0">
+                            Eliminar
+                        </a>*@
+
+                </td>
+
+            </tr>
+        }
+    </tbody>
+</table>
+
+<!-- Modal -->
+<div class="modal fade" id="MiDoc" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        @using (Html.BeginForm("VistaParcial", "Contratos", FormMethod.Post, new { enctype = "multipart/form-data" }))
+        {
+
+            @Html.AntiForgeryToken()
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Nueva Plantilla</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <!--Contenido del centro-->
+                <div class="modal-body">
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+
+
+                    @Html.Hidden("Con_id")
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.ObjDocumentos.Doc_Nom)
+                        @Html.Editor("Doc_Nom", new { htmlAttributes = new { @class = "form-control" } })
+                        @*@Html.Editor("PC_Nom", new { htmlAttributes = new { @class = "form-control" } })*@
+
+
+                    </div>
+
+                    <div class="input-group">
+                        Estado
+                        <div class="col-md-10">
+                            <input type="file" name="plantilla" />
+                        </div>
+                    </div>
+
+                </div>
+
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                    <button type="submit" class="btn btn-primary">Guardar</button>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<script src="~/Scripts/jquery-3.3.1.min.js"></script>
+<script>
+
+    $(".documento").on("click", function () {
+
+        $("#Con_id").val($(this).attr("id"));
+
+    });
+
+</script>

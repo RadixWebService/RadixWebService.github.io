@@ -1,0 +1,128 @@
+﻿@model Proyecto_RadixWeb.Models.MultiplesClases
+
+@{
+    ViewBag.Title = "Index";
+}
+<div id="pagina" style="height: 256px;width: 1000px;margin-left: 284px;margin-top: 65px;">
+
+    <h3 id="titulo">
+
+        <a class="btn btn-success" href="#" data-toggle="modal" data-target="#MiModal">Nueva</a>
+
+    </h3>
+    <p>
+        @Html.ActionLink("Create New", "Create")
+    </p>
+    <table class="table">
+        <tr>
+            <th>
+                Cargo
+            </th>
+            <th>
+                Empresa
+            </th>
+            <th>
+                Plantilla Contrato
+            </th>
+            <th>
+                Descargar
+            </th>
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model.ObjEEmpresa_Cargo)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.cargos.Car_Nom)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.empresas.Emp_Nom)
+                </td>
+
+                @if (item.PC_Id != null)
+                {
+
+                    <td>
+                        <a class="btn btn-success" href="@Url.Action("ViewPdf", "Empresa_Cargo", new { id = item.PC_Id })" target="_blank">Ver PDF</a>
+                    </td>
+                    <td>
+
+                        <a class="btn btn-success" href="@Url.Action("DescargarDocx","Planillascontratos",new { id= item.PC_Id})">Descargar Word</a>
+                    </td>
+                }
+                else
+                {
+
+                    <td>
+                        <a class="btn btn-success plantilla" id="@item.Empcar_id" href="#" data-toggle="modal" data-target="#MiPlantilla">Agregar Plantilla</a>
+                    </td>
+                }
+                <td></td>
+            </tr>
+        }
+
+    </table>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="MiPlantilla" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        @using (Html.BeginForm("Index", "Empresa_Cargo", FormMethod.Post, new { enctype = "multipart/form-data" }))
+        {
+
+            @Html.AntiForgeryToken()
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Nueva Plantilla</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <!--Contenido del centro-->
+                <div class="modal-body">
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+
+
+                    @Html.Hidden("empcar_id")
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.ObjPlantillascontratos.PC_Nom)
+                        @Html.Editor("PC_Nom", new { htmlAttributes = new { @class = "form-control" } })
+                        @*@Html.Editor("PC_Nom", new { htmlAttributes = new { @class = "form-control" } })*@
+
+
+                    </div>
+
+                    <div class="input-group">
+                        Estado
+                        <div class="col-md-10">
+                            <input type="file" name="plantilla" />
+                        </div>
+                    </div>
+
+                </div>
+
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                    <button type="submit" class="btn btn-primary">Guardar</button>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<script src="~/Scripts/jquery-3.3.1.min.js"></script>
+<script>
+
+    $(".plantilla").on("click", function () {
+
+        $("#empcar_id").val($(this).attr("id"));
+
+    });
+
+</script>

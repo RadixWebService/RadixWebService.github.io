@@ -1,0 +1,127 @@
+﻿
+@{
+    ViewBag.Title = "SubirArchivo";
+}
+<link href="~/Scripts/dropzone/dropzone.css" rel="stylesheet" />
+<link href="~/Scripts/dropzone/basic.css" rel="stylesheet" />
+<div id="pagina" style="height: 256px;width: 1000px;margin-left: 284px;margin-top: 170px;">
+
+
+   
+
+    <h1>DropzoneJS File Upload Demo</h1>
+   
+        <div id="dropzone">
+            <form class="dropzone needsclick" id="demo-upload" action="/upload">
+                <div class="dz-message needsclick">
+                    Drop files here or click to upload.<BR>
+                    <spam class="note needsclick">
+                        (This is just a demo dropzone. Selected
+                        files are <strong>not</strong> actually uploaded.)
+                    </spam>
+                </div>
+            </form>
+        </div>
+ 
+
+ 
+   
+</div>
+
+
+
+<style>
+    body {
+        background: rgb(243, 244, 245);
+        height: 100%;
+        color: rgb(100, 108, 127);
+        line-height: 1.4rem;
+        font-family: Roboto, "Open Sans", sans-serif;
+        font-size: 20px;
+        font-weight: 300;
+        text-rendering: optimizeLegibility;
+    }
+
+    h1 {
+        text-align: center;
+    }
+
+    .dropzone {
+        background: white;
+        border-radius: 5px;
+        border: 2px dashed rgb(0, 135, 247);
+        border-image: none;
+        max-width: 500px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+</style>
+
+<script src="~/Scripts/jquery-3.3.1.js"></script>
+<script src="~/Scripts/dropzone/dropzone.js"></script>
+
+<script>
+
+    var dropzone = new Dropzone('#demo-upload', {
+        previewTemplate: document.querySelector('#preview-template').innerHTML,
+        parallelUploads: 2,
+        thumbnailHeight: 120,
+        thumbnailWidth: 120,
+        maxFilesize: 3,
+        filesizeBase: 1000,
+        thumbnail: function (file, dataUrl) {
+            if (file.previewElement) {
+                file.previewElement.classList.remove("dz-file-preview");
+                var images = file.previewElement.querySelectorAll("[data-dz-thumbnail]");
+                for (var i = 0; i < images.length; i++) {
+                    var thumbnailElement = images[i];
+                    thumbnailElement.alt = file.name;
+                    thumbnailElement.src = dataUrl;
+                }
+                setTimeout(function () { file.previewElement.classList.add("dz-image-preview"); }, 1);
+            }
+        }
+
+    });
+
+
+    // Now fake the file upload, since GitHub does not handle file uploads
+    // and returns a 404
+
+    var minSteps = 6,
+        maxSteps = 60,
+        timeBetweenSteps = 100,
+        bytesPerStep = 100000;
+
+    dropzone.uploadFiles = function (files) {
+        var self = this;
+
+        for (var i = 0; i < files.length; i++) {
+
+            var file = files[i];
+            totalSteps = Math.round(Math.min(maxSteps, Math.max(minSteps, file.size / bytesPerStep)));
+
+            for (var step = 0; step < totalSteps; step++) {
+                var duration = timeBetweenSteps * (step + 1);
+                setTimeout(function (file, totalSteps, step) {
+                    return function () {
+                        file.upload = {
+                            progress: 100 * (step + 1) / totalSteps,
+                            total: file.size,
+                            bytesSent: (step + 1) * file.size / totalSteps
+                        };
+
+                        self.emit('uploadprogress', file, file.upload.progress, file.upload.bytesSent);
+                        if (file.upload.progress === 100) {
+                            file.status = Dropzone.SUCCESS;
+                            self.emit("success", file, 'success', null);
+                            self.emit("complete", file);
+                            self.processQueue();
+                            //document.getElementsByClassName("dz-success-mark").style.opacity = "1";
+                        }
+                    };
+                }(file, totalSteps, step), duration);
+            }
+        }
+    }
+</script>

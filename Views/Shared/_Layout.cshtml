@@ -1,0 +1,222 @@
+﻿<!DOCTYPE html>
+<html lang="es-cl">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Radix - Somos la raiz de todo</title>
+    @if (ViewBag.Title == ("Logi"))
+    {
+        <link href="~/Content/css/login/bootstrap.min.css" rel="stylesheet" />
+        <link href="~/Content/css/login/font-awesome.min.css" rel="stylesheet" />
+        <link href="~/Content/css/login/sb-admin.css" rel="stylesheet" />
+
+    }
+    else if (ViewBag.Title == ("Register "))
+    {
+
+
+
+    }
+    else if (ViewBag.Title == ("Dashboard_empresa"))
+    {
+        
+       
+
+       
+    }
+    else
+    {
+        <!-- Bootstrap core CSS -->
+        <link href="~/Content/css/bootstrap.min.css" rel="stylesheet" />
+        @*<link href="~/Content/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" />*@
+        <!-- Custom fonts for this template -->
+        <link href="~/Content/css/font-awesome.min.css" rel="stylesheet" />
+        @*<link href="~/Content/vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" />*@
+        <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
+        <link href='https://fonts.googleapis.com/css?family=Kaushan+Script' rel='stylesheet' type='text/css'>
+        <link href='https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+        <link href='https://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700' rel='stylesheet' type='text/css'>
+        <!-- Custom styles for this template -->
+        <link href="~/Content/css/agency.min.css" rel="stylesheet" />
+        @*<link href="~/Content/css/sb-admin.min.css" rel="stylesheet" />
+            <link href="~/Content/css/sb-admin.css" rel="stylesheet" />
+            <script src="~/Scripts/modernizr-2.8.3.js"></script>*@
+    }
+
+</head>
+
+<body>
+    @RenderBody()
+
+    @if (ViewBag.Title == ("Login"))
+    {
+        <nav class="navbar navbar-expand-lg navbar-dark fixed-top" style="padding-top: 0;
+    padding-bottom: 0;
+    background-color: #212529;" id="mainNav">
+            <div class="container">
+
+                <a href="@Url.Action("Index", "Home")">  <img style="top:10px; height:60px;  width:140px;" src="~/Imagenes/Logo Radix_v2.png" /> </a>
+                <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+                    Menu
+                    <i class="fa fa-bars"></i>
+                </button>
+
+                <div class="collapse navbar-collapse" id="navbarResponsive">
+
+
+                    <ul class="navbar-nav text-uppercase ml-auto" ;">
+
+                        <li class="nav-item"><a class="nav-link js-scroll-trigger" href="@Url.Action("Register", "Account")">Registrarse </a></li>
+
+
+                    </ul>
+                </div>
+
+            </div>
+        </nav>
+    }
+    else if (ViewBag.Title == ("Home"))
+    {
+        <!-- Navigation -->
+        <nav class="navbar navbar-expand-lg navbar-dark fixed-top" id="mainNav">
+            <div class="container">
+
+                <a href="@Url.Action("Index", "Home")">  <img style="top:10px; height:60px;  width:140px;" src="~/Imagenes/Logo Radix_v2.png" /> </a>
+                <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+                    Menu
+                    <i class="fa fa-bars"></i>
+                </button>
+
+                <div class="collapse navbar-collapse" id="navbarResponsive">
+                    <ul class="navbar-nav text-uppercase ml-auto">
+                        <li class="nav-item">
+                            <a class="nav-link js-scroll-trigger" href="#services">Servicios</a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link js-scroll-trigger" href="#about">Sobre Nosotros</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link js-scroll-trigger" href="#team">Equipo</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link js-scroll-trigger" href="#contact">Contacto</a>
+                        </li>
+                    </ul>
+                    <ul class="nav text-uppercase ml-auto" style="margin-left: 150px;">
+
+                        @if (Request.IsAuthenticated && User.IsInRole("Radix"))
+                        {
+                            <li>@Html.ActionLink("RolesAdmin", "Index", "RolesAdmin")</li>
+                            <li>@Html.ActionLink("UsersAdmin", "Index", "UsersAdmin")</li>
+                        }
+                    </ul>
+
+                    <ul class="navbar-nav text-uppercase ml-auto" ;">
+
+
+                        <li class="nav-item"><a class="nav-link" id="log" href="#ex1" data-toggle="modal" data-target="#MiModal">Ejemplo</a></li>
+
+                        <li class="nav-item"><a class="nav-link js-scroll-trigger" href="@Url.Action("Register", "Account")">Registrarse </a></li>
+                        <li class="nav-item"><a class="nav-link js-scroll-trigger" href="@Url.Action("Login", "Account")">Iniciar Sesión </a></li>
+
+
+                    </ul>
+                </div>
+
+            </div>
+        </nav>
+    }
+    else if (ViewBag.Title == ("Register"))
+    {
+        <!-- Navigation -->
+        <nav class="navbar navbar-expand-lg navbar-dark fixed-top" style="padding-top: 0;
+    padding-bottom: 0;
+    background-color: #212529;" id="mainNav">
+            <div class="container">
+
+                <a href="@Url.Action("Index", "Home")">  <img style="top:10px; height:60px;  width:140px;" src="~/Imagenes/Logo Radix_v2.png" /> </a>
+                <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+                    Menu
+                    <i class="fa fa-bars"></i>
+                </button>
+
+                <div class="collapse navbar-collapse" id="navbarResponsive">
+
+
+                    <ul class="navbar-nav text-uppercase ml-auto" ;">
+
+                        <li class="nav-item"><a class="nav-link js-scroll-trigger" href="@Url.Action("Login", "Account")">Iniciar Sesión </a></li>
+
+
+                    </ul>
+                </div>
+
+            </div>
+        </nav>
+    }
+
+
+    <!-- Modal -->
+        <div class="modal fade" id="MiModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title" id="exampleModalLabel">Iniciar Sesión</h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+
+                    <div class="modal-body" id="formulario_login">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    <!-- Bootstrap core JavaScript -->
+    <script src="~/Scripts/Layout/jquery.min.js"></script>
+    <script src="~/Scripts/Layout/bootstrap.bundle.min.js"></script>
+    <!-- Plugin JavaScript -->
+    <script src="~/Scripts/Layout/jquery.easing.min.js"></script>
+    <!-- Contact form JavaScript -->
+    <script src="~/Scripts/Layout/jqBootstrapValidation.js"></script>
+    <script src="~/Scripts/Layout/contact_me.js"></script>
+    <!-- Custom scripts for this template -->
+    <script src="~/Scripts/Layout/agency.min.js"></script>
+
+    <script src="~/Scripts/jquery-3.3.1.js"></script>
+    <!-- Start of HubSpot Embed Code -->
+    <script type="text/javascript" id="hs-script-loader" async defer src="//js.hs-scripts.com/4893307.js"></script>
+    <!-- End of HubSpot Embed Code -->
+
+    <script>
+
+        $('#log').click(function () {
+
+          
+            $('#formulario_login').load('/Account/Modal_Login');
+
+        });
+
+    </script>
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("Scripts", required: false)
+</body>
+
+
+
+</html>
+
+
+

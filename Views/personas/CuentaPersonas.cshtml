@@ -1,0 +1,51 @@
+﻿@model Proyecto_RadixWeb.Models.MultiplesClases
+@{
+    ViewBag.Title = "Cuenta Persona";
+}
+<link href="~/Content/estilosRegistrar.css" rel="stylesheet" />
+<div style="height: 256px;width: 1000px;margin-left: 284px;margin-top: 65px;">
+
+    <div class="container" style=" width: 100%;">
+        <div class="row" style="width: 50%;
+    margin-left: 260px;">
+
+            <div class="form-login" style="margin-top: 5%;margin-top: 5%;width: 75%;margin-left: 25%;">
+                <section id="loginForm">
+                    @using (Html.BeginForm("CuentaPersonas", "Personas", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                    {
+                        @Html.AntiForgeryToken()
+
+                        <h4 style="margin-left: 27%;height: 30px;">Registrarse</h4>
+
+                        <div class="input-group inputregistrar" style="height: 50px;">
+
+                            <div class="col-md-10">
+                                @Html.TextBoxFor(m => m.objRegistrar.Email, new { @class = "form-control", placeholder = "Ingrese Email", @style = "text-align:center" })
+                            </div>
+                        </div>
+                        <div class="input-group inputregistrar" style="height: 50px;">
+
+                            <div class="col-md-10">
+                                @Html.PasswordFor(m => m.objRegistrar.Password, new { @class = "form-control", placeholder = "Ingrese Contraseña", @style = "text-align:center" })
+                            </div>
+                        </div>
+                        <div class="input-group inputregistrar" style="height: 50px;">
+
+                            <div class="col-md-10">
+                                @Html.PasswordFor(m => m.objRegistrar.ConfirmPassword, new { @class = "form-control", placeholder = "Confirmar Contraseña", @style = "text-align:center" })
+                            </div>
+                        </div>
+                        <div class="wrapper" style="margin-left: 30%;">
+                            <span class="group-btn">
+                                <input type="submit" value="Crear Cuenta" class="btn btn-primary btn-md" />
+                            </span>
+                        </div>
+
+                    }
+                </section>
+            </div>
+
+
+        </div>
+    </div>
+    </div>

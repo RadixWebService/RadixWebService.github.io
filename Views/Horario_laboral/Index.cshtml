@@ -1,0 +1,52 @@
+﻿@model IEnumerable<Proyecto_RadixWeb.Models.horario_laboral>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+
+<div id="pagina" style="height: 256px;width: 1000px;margin-left: 284px;margin-top: 65px;">
+
+    <h2>Horario</h2>
+
+    <table class="table">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Hl_Titulo)
+            </th>
+
+            <th>
+                Hora Inicio
+            </th>
+            <th>
+                Hora Fin
+            </th>
+
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Hl_Titulo)
+                </td>
+
+                <td>
+                    @Html.DisplayFor(modelItem => item.Hl_Inicio)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Hl_Termino)
+                </td>
+
+
+                <td>
+                    <a href="@Url.Action("Asistencia_Personas", "Asistencias", new { Subempcar_id = item.Subempcar_id, horario_id=item.Hl_Id })" class="btn btn-outline-success btn-sm m-0">
+                      Medir Asistencia
+                    </a>
+                </td>
+            </tr>
+        }
+
+    </table>
+</div>

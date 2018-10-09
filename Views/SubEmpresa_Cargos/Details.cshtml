@@ -1,0 +1,34 @@
+﻿@model Proyecto_RadixWeb.Models.subempresa_cargo
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>subempresa_cargo</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.cargos.Car_Nom)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.cargos.Car_Nom)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.subempresas.Sub_Nom)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.subempresas.Sub_Nom)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.Subempcar_id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

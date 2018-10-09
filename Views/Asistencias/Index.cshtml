@@ -1,0 +1,140 @@
+﻿@model IEnumerable<Proyecto_RadixWeb.Models.asistencias>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<div id="pagina" style="height: 256px;width: 1000px;margin-left: 284px;margin-top: 65px;">
+
+    <h2>Asistencia</h2>
+
+    <p>
+        @Html.ActionLink("Agregar", "Create")
+    </p>
+    <table class="table">
+        <tr>
+            <th>
+                R.U.T
+            </th>
+            <th>
+                Nombre
+            </th>
+            <th>
+                Apellidos
+            </th>
+       
+            <th>
+                Asistencia
+            </th>
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.contratos.Per_Rut)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.contratos.personas.Per_Nom)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.contratos.personas.Per_ApePat)
+                    @Html.DisplayFor(modelItem => item.contratos.personas.Per_ApeMat)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.horario_laboral.Hl_Inicio)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.horario_laboral.Hl_Termino)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.asis_estado)
+                </td>
+
+
+                <td>
+                    <label class="switch">
+                        <input id="togBtn" type="checkbox">
+                        <span class="slider round"></span>
+                    </label>
+                </td>
+            </tr>
+        }
+
+    </table>
+</div>
+
+<script src="~/Scripts/jquery-3.3.1.js"></script>
+<script>
+    var switchStatus = false;
+    $("#togBtn").on('change', function () {
+        if ($(this).is(':checked')) {
+            switchStatus = $(this).is(':checked');
+            alert(switchStatus);// To verify
+        }
+        else {
+            switchStatus = $(this).is(':checked');
+            alert(switchStatus);// To verify
+        }
+    });
+</script>
+<style>
+    .switch {
+        position: relative;
+        display: inline-block;
+        width: 60px;
+        height: 34px;
+    }
+
+        .switch input {
+            display: none;
+        }
+
+    .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #ccc;
+        -webkit-transition: .4s;
+        transition: .4s;
+    }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            -webkit-transition: .4s;
+            transition: .4s;
+        }
+
+    input:checked + .slider {
+        background-color: #2196F3;
+    }
+
+    input:focus + .slider {
+        box-shadow: 0 0 1px #2196F3;
+    }
+
+    input:checked + .slider:before {
+        -webkit-transform: translateX(26px);
+        -ms-transform: translateX(26px);
+        transform: translateX(26px);
+    }
+
+    /* Rounded sliders */
+    .slider.round {
+        border-radius: 34px;
+    }
+
+        .slider.round:before {
+            border-radius: 50%;
+        }
+</style>

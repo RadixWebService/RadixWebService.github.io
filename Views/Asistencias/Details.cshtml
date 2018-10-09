@@ -1,0 +1,42 @@
+﻿@model Proyecto_RadixWeb.Models.asistencias
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>asistencias</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.asis_estado)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.asis_estado)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.contratos.Per_Rut)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.contratos.Per_Rut)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.horario_laboral.Hl_Titulo)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.horario_laboral.Hl_Titulo)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.asis_id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

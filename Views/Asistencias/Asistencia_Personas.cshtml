@@ -1,0 +1,244 @@
+﻿@model Proyecto_RadixWeb.Models.MultiplesClases
+
+@{
+    ViewBag.Title = "Asistencia_Personas";
+}
+
+<div id="pagina" style="height: 256px;width: 1000px;margin-left: 284px;margin-top: 65px;">
+
+    <h2>Medir Asistencia Personas</h2>
+
+    <h2><button id="btn_medir" class="btn btn-outline-success btn-sm m-0"> Aplicar </button></h2>
+
+
+
+    <table class="table" id="tb_asistencia">
+
+        <thead>
+            <tr>
+
+                <th>
+                    R.U.T
+                </th>
+                <th>
+                    Nombre
+                </th>
+                <th>
+                    Apellidos
+                </th>
+
+                <th></th>
+            </tr>
+        </thead>
+        @if (ViewBag.contar == 0)
+        {
+            <tbody>
+                @foreach (var item in Model.ObjEContrato)
+                {
+
+                    <tr>
+                        <td style="display:none;">
+
+                            @Html.Hidden("item_asis_id", 0)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.personas.Per_Rut)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.personas.Per_Nom)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.personas.Per_ApePat)
+                            @Html.DisplayFor(modelItem => item.personas.Per_ApeMat)
+                        </td>
+                        <td>
+
+                            <label class="switch">
+                                <input class="checkbox" id="togBtn" value="@item.Con_Id" type="checkbox">
+                                <span class="slider round"></span>
+                            </label>
+
+
+                        </td>
+                    </tr>
+
+                }
+            </tbody>
+
+
+        }
+        else if (ViewBag.contar > 0)
+        {
+            <tbody>
+                @foreach (var item in Model.ObjEAsistencia)
+                {
+
+                    <tr>
+                        <td style="display:none;">
+                            @Html.HiddenFor(modelItem => item.asis_id)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.contratos.personas.Per_Rut)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.contratos.personas.Per_Nom)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.contratos.personas.Per_ApePat)
+                            @Html.DisplayFor(modelItem => item.contratos.personas.Per_ApeMat)
+                        </td>
+                        <td>
+
+                            <label class="switch">
+                                @if (item.asis_estado == false)
+                                {
+                                    <input class="checkbox" id="togBtn" value="@item.Con_Id" type="checkbox">
+
+                                }
+                                else if (item.asis_estado == true)
+                                {
+                                    <input class="checkbox" id="togBtn" value="@item.Con_Id" type="checkbox" checked>
+
+                                }
+                                <span class="slider round"></span>
+                            </label>
+
+
+                        </td>
+                    </tr>
+
+                }
+            </tbody>
+
+        }
+    </table>
+</div>
+
+<script src="~/Scripts/jquery-3.3.1.js"></script>
+<script>
+
+    $(document).ready(function () {
+  
+    $('#btn_medir').on('click', function () {
+
+        var lista_asistencia = [];
+
+        //var filas = $('#tb_asistencia tbody tr').length;
+
+
+        $('#tb_asistencia tbody tr').each(function ( ) {
+            var horario_id = "@ViewBag.horario_id";
+
+            var lista = {};
+
+            var switchStatus = '';
+
+            var rows = $('#tb_asistencia tbody tr').length;
+
+               for (var i = 0; i < rows; i++) {
+                   var row = $(this);
+
+
+                   if (row.find("TD .checkbox").is(':checked')) {
+
+                       switchStatus = row.find("td .checkbox").is(':checked');
+                   }
+                   else {
+                       switchStatus = row.find("td .checkbox").is(':checked');
+                   }
+
+
+                   lista.asis_id = row.find("td #item_asis_id").val();
+
+                   lista.Con_Id = row.find("td .checkbox").val();
+                   lista.Hl_Id = horario_id;
+                   lista.asis_estado = "" + switchStatus + "";
+                  
+
+               }
+
+            lista_asistencia.push(lista);
+
+         });
+
+
+         $.ajax({
+                type: "POST",
+                url: "@Url.Action("Guardar_Asistencia", "Asistencias")",
+                data: {'lista_asistencia': lista_asistencia },
+                success: function (data) {
+                    if (data.status) {
+
+                        window.location.href = "@Url.Action("Index", "Horario_laboral", new { Subempcar_id = ViewBag.Subempcar_id })";
+                    }
+                    alert('Almacenado');
+                },
+                error: function () {
+                    alert('Error');
+                }
+
+            });
+    });
+
+    });
+
+</script>
+<style>
+    .switch {
+        position: relative;
+        display: inline-block;
+        width: 60px;
+        height: 34px;
+    }
+
+        .switch input {
+            display: none;
+        }
+
+    .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #ccc;
+        -webkit-transition: .4s;
+        transition: .4s;
+    }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            -webkit-transition: .4s;
+            transition: .4s;
+        }
+
+    input:checked + .slider {
+        background-color: #2196F3;
+    }
+
+    input:focus + .slider {
+        box-shadow: 0 0 1px #2196F3;
+    }
+
+    input:checked + .slider:before {
+        -webkit-transform: translateX(26px);
+        -ms-transform: translateX(26px);
+        transform: translateX(26px);
+    }
+
+    /* Rounded sliders */
+    .slider.round {
+        border-radius: 34px;
+    }
+
+        .slider.round:before {
+            border-radius: 50%;
+        }
+</style>

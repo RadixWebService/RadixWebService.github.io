@@ -1,0 +1,366 @@
+﻿
+@{
+    ViewBag.Title = "Horario";
+}
+
+
+<div style="height: 256px;width: 1000px;margin-left: 284px;margin-top: 65px;">
+
+
+    @*<div>
+            <button type="button" class="btn btn-default" data-toggle="modal" data-target="#myModalSave">Crear</button>
+        </div>*@
+    <div id="calender"></div>
+
+
+    <div id="myModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title"><span id="eventTitle"></span></h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+
+                    <p id="pDetails"></p>
+
+                </div>
+                <div class="modal-footer">
+                    <button id="btnDelete" class="btn btn-default btn-sm pull-right">
+                        <span class="glyphicon glyphicon-remove"></span> Eliminar
+                    </button>
+                    <button id="btnEdit" class="btn btn-default btn-sm pull-right" style="margin-right:5px;">
+                        <span class="glyphicon glyphicon-pencil"></span> Editar
+                    </button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="myModalSave" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Save Event</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal">
+                        <input type="hidden" id="hdEventID" value="0" />
+                        <div class="form-group">
+                            <label>Titulo</label>
+                            <input type="text" id="txtSubject" class="form-control" />
+                        </div>
+                        <div class="form-group">
+                            <label>Inicio</label>
+                            <div class="input-group date" id="dtp1">
+
+                                @*   <input type="datetime-local"  class="form-control" id="party-time" name="party-time" value="2018-06-26T19:30"/>*@
+                                <input type="text" id="txtStart" class="form-control" />
+
+                                <span class="input-group-addon">
+                                    <span class="glyphicon glyphicon-calendar"></span>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="checkbox">
+                                <label><input type="checkbox" id="chkIsFullDay" checked="checked" />  Si es Todo el dia</label>
+                            </div>
+                        </div>
+                        <div class="form-group" id="divEndDate" style="display:none">
+                            <label>Termino</label>
+                            <div class="input-group date" id="dtp2">
+                                <input type="text" id="txtEnd" class="form-control" />
+                                <span class="input-group-addon">
+                                    <span class="glyphicon glyphicon-calendar"></span>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Descripción</label>
+                            <textarea id="txtDescription" rows="3" class="form-control"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Color del Tema</label>
+                            <select id="ddThemeColor" class="form-control">
+                                <option value="">Default</option>
+                                <option value="red">Rojo</option>
+                                <option value="blue">Azul</option>
+                                <option value="black">Negro</option>
+                                <option value="green">Verde</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Dia Repeticion</label>
+                            <select id="ddThemeColor" class="form-control">
+                                <option value="1">Lunes</option>
+                                <option value="2">Martes</option>
+                                <option value="3">Miercoles</option>
+                                <option value="4">Jueves</option>
+                                <option value="5">Viernes</option>
+                                <option value="6">Sabado</option>
+                                <option value="0">Domingo</option>
+                            </select>
+                        </div>
+                        <button type="button" id="btnSave" class="btn btn-success">Guardar</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<link href="//cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.4.0/fullcalendar.min.css" rel="stylesheet" />
+<link href="//cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.4.0/fullcalendar.print.css" rel="stylesheet" media="print" />
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css" rel="stylesheet" />
+@section Scripts{
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.4.0/fullcalendar.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
+
+    <script src="~/Scripts/locale-all.js"></script>
+
+    <script>
+
+        $(document).ready(function () {
+
+                var events = [];
+            var selectedEvent = null;
+            var Subempcar_id = '@ViewBag.Subempcar_id';
+            FetchEventAndRenderCalendar();
+
+
+            function FetchEventAndRenderCalendar() {
+                    events = [];
+                    $.ajax({
+                        type: "GET",
+                        url: '@Url.Action("GetEvents", "Horario_laboral")',
+                        datatype: JSON,
+                        data: {'Subempcar_id': Subempcar_id },
+                        success: function (data) {
+                            $.each(data, function (i, v) {
+                                events.push({
+                                    eventID: v.Hl_Id,
+                                    title: v.Hl_Titulo,
+                                    description: v.Hl_Descripcion,
+                                    start: moment(v.Hl_Inicio),
+                                    end: v.Hl_Termino !== null ? moment(v.Hl_Termino) : null,
+                                    color: v.Hl_ColorTema,
+                                    allDay: v.Hl_TodoDia
+                                });
+                            });
+
+                            GenerateCalender(events);
+                        },
+                        error: function (error) {
+                            alert('Error en cargar');
+                        }
+                    });
+                }
+
+
+
+
+                var NombreDias = ['Domingo', 'Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sábado'];
+                var NombreDiasAbrebiado = ['Dom', 'Lun', 'Mar', 'Mie', 'Jue', 'Vie', 'Sab'];
+
+                var NombreMeses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+                var NombreMesesAbrebiado = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
+
+            function GenerateCalender(events) {
+                    $('#calender').fullCalendar('destroy');
+
+                    $('#calender').fullCalendar({
+
+
+                        defaultView: 'agendaWeek',
+                        defaultDate: new Date(),
+                        timeFormat: 'h(:mm)a',
+                        header: {
+                            left: 'prev,next, today, boton1',
+                            center: 'title',
+                            right: 'agendaDay,agendaWeek,month'
+                        },
+                        customButtons: {
+                            boton1: {
+                                text: 'Agregar',
+                                click: function () {
+                                    $('#myModalSave').modal();
+                                }
+                            }
+                        },
+                        titleFormat: 'D MMMM YYYY',
+                        buttonText: {
+                            today: 'Hoy',
+                            day: 'Día',
+                            week: 'Semana',
+                            month: 'Mes'
+                        },
+                        dayNames: NombreDias,
+                        dayNamesShort: NombreDiasAbrebiado,
+                        monthNames: NombreMeses,
+                        monthNamesShort: NombreMesesAbrebiado,
+                        firstDay: 1,
+                        eventLimit: true,
+                        eventColor: '#378006',
+                        events: events,
+                        eventClick: function (calEvent, jsEvent, view) {
+                            selectedEvent = calEvent;
+                            $('#myModal #eventTitle').text(calEvent.title);
+                            var $description = $('<div/>');
+                            $description.append($('<p/>').html('<b>Inicio:</b>' + calEvent.start.format("DD-MMM-YYYY HH:mm a")));
+                            if (calEvent.end !== null) {
+                                $description.append($('<p/>').html('<b>Termino:</b>' + calEvent.end.format("DD-MMM-YYYY HH:mm a")));
+                            }
+                            $description.append($('<p/>').html('<b>Descripción:</b>' + calEvent.description));
+                            $('#myModal #pDetails').empty().html($description);
+
+                            $('#myModal').modal();
+                        },
+                        selectable: true,
+                        select: function (start, end) {
+                            selectedEvent = {
+                                eventID: 0,
+                                title: '',
+                                description: '',
+                                start: start,
+                                end: end,
+                                allDay: false,
+                                color: ''
+                            };
+                            openAddEditForm();
+                            $('#calendar').fullCalendar('unselect');
+                        },
+                        editable: true,
+                        eventDrop: function (event) {
+                            var data = {
+                                EventID: event.eventID,
+                                Subject: event.title,
+                                Start: event.start.format('DD/MM/YYYY HH:mm A'),
+                                End: event.end !== null ? event.end.format('DD/MM/YYYY HH:mm A') : null,
+                                Description: event.description,
+                                ThemeColor: event.color,
+                                IsFullDay: event.allDay
+                            };
+                            SaveEvent(data);
+                        }
+                    });
+                }
+
+                // ------------------ Metodo Editar -------------------- //
+                $('#btnEdit').click(function () {
+                    //Open modal dialog for edit event
+                    openAddEditForm();
+                });
+
+                // ------------------ Metodo Eliminar ------------------ //
+
+                $('#btnDelete').click(function () {
+                    if (selectedEvent !== null && confirm('¿Desea Eliminar?')) {
+                        $.ajax({
+                            type: "POST",
+                            url: '/Horario_laboral/DeleteEvent',
+                            data: { 'Hl_Id': selectedEvent.eventID },
+                            success: function (data) {
+                                if (data.status) {
+                                    //Refresh the calender
+                                    FetchEventAndRenderCalendar();
+                                    $('#myModal').modal('hide');
+                                }
+                            },
+                            error: function () {
+                                alert('Failed');
+                            }
+                        });
+                    }
+                });
+                $('#dtp1,#dtp2').datetimepicker({
+                    format: 'DD/MM/YYYY HH:mm A'
+                });
+                $('#chkIsFullDay').change(function () {
+                    if ($(this).is(':checked')) {
+                        $('#divEndDate').hide();
+                    }
+                    else {
+                        $('#divEndDate').show();
+                    }
+                });
+
+                // ------------------ Metodo Abrir Formulario ------------------ //
+
+                function openAddEditForm() {
+                    if (selectedEvent !== null) {
+                        $('#hdEventID').val(selectedEvent.eventID);
+                        $('#txtSubject').val(selectedEvent.title);
+                        $('#txtStart').val(selectedEvent.start.format('DD/MM/YYYY HH:mm A'));
+                        $('#chkIsFullDay').prop("checked", selectedEvent.allDay || false);
+                        $('#chkIsFullDay').change();
+                        $('#txtEnd').val(selectedEvent.end !== null ? selectedEvent.end.format('DD/MM/YYYY HH:mm A') : '');
+                        $('#txtDescription').val(selectedEvent.description);
+                        $('#ddThemeColor').val(selectedEvent.color);
+                    }
+                    $('#myModal').modal('hide');
+                    $('#myModalSave').modal();
+                }
+
+                // ------------------ Guardar Datos ------------------ //
+
+                $('#btnSave').click(function () {
+                    //Validation/
+                    if ($('#txtSubject').val().trim() === "") {
+                        alert('Subject required');
+                        return;
+                    }
+                    if ($('#txtStart').val().trim() === "") {
+                        alert('Start date required');
+                        return;
+                    }
+                    if ($('#chkIsFullDay').is(':checked') === false && $('#txtEnd').val().trim() === "") {
+                        alert('End date required');
+                        return;
+                    }
+                    else {
+                        var startDate = moment($('#txtStart').val(), "DD/MM/YYYY HH:mm A").toDate();
+                        var endDate = moment($('#txtEnd').val(), "DD/MM/YYYY HH:mm A").toDate();
+                        if (startDate > endDate) {
+                            alert('Invalid end date');
+                            return;
+                        }
+                    }
+
+                    var data = {
+                        Hl_Id: $('#hdEventID').val(),
+                        Hl_Titulo: $('#txtSubject').val().trim(),
+                        Hl_Inicio: $('#txtStart').val().trim(),
+                        Hl_Termino: $('#chkIsFullDay').is(':checked') ? null : $('#txtEnd').val().trim(),
+                        Hl_Descripcion: $('#txtDescription').val(),
+                        Hl_ColorTema: $('#ddThemeColor').val(),
+                        Hl_TodoDia: $('#chkIsFullDay').is(':checked')
+                    }
+                    SaveEvent(data);
+                    // call function for submit data to the server
+                });
+                function SaveEvent(data) {
+                    $.ajax({
+                        type: "POST",
+                        url: '@Url.Action("SaveEvent", "Horario_laboral", new { Subempcar_id = ViewBag.Subempcar_id })',
+                        //url: '/Horario_laboral/SaveEvent',
+                        data: data,
+                        success: function (data) {
+                            if (data.status) {
+                                //Refresh the calender
+                                FetchEventAndRenderCalendar();
+                                $('#myModalSave').modal('hide');
+                            }
+                        },
+                        error: function () {
+                            alert('Failed');
+                        }
+                    });
+                }
+            });
+    </script>
+}

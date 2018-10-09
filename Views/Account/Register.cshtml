@@ -1,0 +1,176 @@
+﻿@model Proyecto_RadixWeb.Models.MultiplesClases
+@{
+    ViewBag.Title = "Register";
+}
+<body class="bg-secondary" style="margin-top: 10%">
+    <div class="container">
+        <div class="card card-register mx-auto mt-5">
+            <div class="card-header">Register an Account</div>
+            <div class="card-body">
+                @using (Html.BeginForm("Register", "Account", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                {
+                    @Html.AntiForgeryToken()
+
+                <form>
+                    <div class="form-group">
+                        @*<div class="form-row">
+                <div class="col-md-6">
+                    <label for="exampleInputName">First name</label>
+                    <input class="form-control" id="exampleInputName" type="text" aria-describedby="nameHelp" placeholder="Enter first name">
+                </div>
+                <div class="col-md-6">
+                    <label for="exampleInputLastName">Last name</label>
+                    <input class="form-control" id="exampleInputLastName" type="text" aria-describedby="nameHelp" placeholder="Enter last name">
+                </div>
+            </div>*@
+                        <label for="exampleInputEmail1">Empresa</label>
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                        @Html.EditorFor(model => model.ObjEmpresas.Emp_Nom, new { htmlAttributes = new { @class = "form-control", placeholder = "Ingrese Nombre de la Empresa", @style = "text-align:center" } })
+                        @Html.ValidationMessageFor(model => model.ObjEmpresas.Emp_Nom, "", new { @class = "text-danger" })
+
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">Email address</label>
+                        @* <input class="form-control" id="exampleInputEmail1" type="email" aria-describedby="emailHelp" placeholder="Enter email">*@
+                        @Html.TextBoxFor(m => m.ObjRegistrar.Email, new { @class = "form-control", placeholder = "Ingrese Email", @style = "text-align:center" })
+
+                    </div>
+                    <div class="form-group">
+                        <div class="form-row">
+                            <div class="col-md-6">
+                                <label for="exampleInputPassword1">Password</label>
+                                @*<input class="form-control" id="exampleInputPassword1" type="password" placeholder="Password">*@
+                                @Html.PasswordFor(m => m.ObjRegistrar.Password, new { @class = "form-control", placeholder = "Ingrese Contraseña", @style = "text-align:center" })
+
+                            </div>
+                            <div class="col-md-6">
+                                <label for="exampleConfirmPassword">Confirm password</label>
+                                @* <input class="form-control" id="exampleConfirmPassword" type="password" placeholder="Confirm password">*@
+                                @Html.PasswordFor(m => m.ObjRegistrar.ConfirmPassword, new { @class = "form-control", placeholder = "Confirmar Contraseña", @style = "text-align:center" })
+
+                            </div>
+                        </div>
+                    </div>
+                    @*<a class="btn btn-primary btn-block" href="login.html">Register</a>*@
+                   
+                            <input type="submit" value="Registrarse" class="btn btn-primary btn-block" />
+                      
+                </form>
+                    <div class="text-center">
+                        <a class="d-block small mt-3" href="login.html">Login Page</a>
+                        <a class="d-block small" href="forgot-password.html">Forgot Password?</a>
+                    </div>
+                }
+                </div>
+        </div>
+    </div>
+    <!-- Bootstrap core JavaScript-->
+    <script src="~/Scripts/dashboard/jquery.min.js"></script>
+    <script src="~/Scripts/dashboard/bootstrap.bundle.min.js"></script>
+    <!-- Core plugin JavaScript-->
+    <script src="~/Scripts/dashboard/jquery.easing.min.js"></script>
+</body>
+@*<link href="~/Content/css/login.css" rel="stylesheet" />
+<link href="~/Content/css/bootstrap.min.css" rel="stylesheet" />*@
+@*<div class="container">
+    <div class="row text-center">
+        <div class="col-md-4">
+
+            <div class="form-login" style="margin-top: 5%;margin-top: 5%;width: 75%;margin-left: 25%;">
+                <section id="loginForm">
+                    @using (Html.BeginForm("Register", "Account", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                    {
+                        @Html.AntiForgeryToken()
+
+                        <h4 style="margin-left: auto;">Registrarse</h4>
+                        <div class="input-group inputregistrar" style="height: 50px;">
+                            <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                            <div class="col-md-10" style="text-align:center">
+                                @Html.EditorFor(model => model.ObjEmpresas.Emp_Nom, new { htmlAttributes = new { @class = "form-control", placeholder = "Ingrese Nombre de la Empresa", @style = "text-align:center" } })
+                                @Html.ValidationMessageFor(model => model.ObjEmpresas.Emp_Nom, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="input-group inputregistrar" style="height: 50px;">
+                            <span class="input-group-addon"><i class="glyphicon glyphicon-envelope"></i></span>
+
+                            <div class="col-md-10">
+                                @Html.TextBoxFor(m => m.ObjRegistrar.Email, new { @class = "form-control", placeholder = "Ingrese Email", @style = "text-align:center" })
+                            </div>
+                        </div>
+                        <div class="input-group inputregistrar" style="height: 50px;">
+                            <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+
+                            <div class="col-md-10">
+                                @Html.PasswordFor(m => m.ObjRegistrar.Password, new { @class = "form-control", placeholder = "Ingrese Contraseña", @style = "text-align:center" })
+                            </div>
+                        </div>
+                        <div class="input-group inputregistrar" style="height: 50px;">
+                            <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+
+                            <div class="col-md-10">
+                                @Html.PasswordFor(m => m.ObjRegistrar.ConfirmPassword, new { @class = "form-control", placeholder = "Confirmar Contraseña", @style = "text-align:center" })
+                            </div>
+                        </div>
+                        <div class="wrapper" style="margin-left: auto;margin-top:10%;">
+                            <span class="group-btn">
+                                <input type="submit" value="Registrarse" class="btn btn-primary btn-md" />
+                            </span>
+                        </div>
+
+                    }
+                </section>
+            </div>
+
+
+        </div>
+    </div>
+</div>*@
+
+
+
+
+
+
+
+
+
+
+
+
+
+@*<h2>@ViewBag.Title.</h2>*@
+
+@*@using (Html.BeginForm("Register", "Account", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+    {
+        @Html.AntiForgeryToken()
+        <h4>Create a new account.</h4>
+        <hr />
+        @Html.ValidationSummary("", new { @class = "text-danger" })
+        <div class="form-group">
+            @Html.LabelFor(m => m.Email, new { @class = "col-md-2 control-label" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.Password, new { @class = "col-md-2 control-label" })
+            <div class="col-md-10">
+                @Html.PasswordFor(m => m.Password, new { @class = "form-control" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.ConfirmPassword, new { @class = "col-md-2 control-label" })
+            <div class="col-md-10">
+                @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "form-control" })
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" class="btn btn-default" value="Register" />
+            </div>
+        </div>
+    }*@
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
